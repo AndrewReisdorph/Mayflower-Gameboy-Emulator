@@ -1,0 +1,201 @@
+#pragma once
+#include <set>
+#include <wx/wx.h>
+#include "GameboyScreenPanel.h"
+#include "RamAssemblyList.h"
+#include "MayflowerWindow.h"
+#include "GBCPU.h"
+#include "GBMMU.h"
+#include "GBLCD.h"
+#include "GBTypes.h"
+
+
+#define CYCLES_PER_UPDATE   69905
+#define CLOCKSPEED        4194304
+
+// Misc
+#define M_ResetRegBit(reg, bit) {reg &= ~(bit);}
+#define M_SetRegBit(reg, bit) {reg |= bit;}
+#define M_ResetBitAtHL(bit) m_MMU->WriteMemory8(M_RegisterHL, m_MMU->ReadMemory8(M_RegisterHL) & (~(bit)))
+#define M_SetBitAtHL(bit) m_MMU->WriteMemory8(M_RegisterHL, m_MMU->ReadMemory8(M_RegisterHL) | bit)
+#define M_BitIsSet(val, bit) (val & (1<<bit))
+#define M_ServiceInterrupt(irequested, ienabled, interrupt) ((ienabled & interrupt) && (irequested & interrupt))
+
+
+// Cartridge
+#define CARTRIDGE_TITLE_ADDR           0x0134
+#define CARTRIDGE_CGB_FLAG_ADDR        0x0143
+#define CARTRIDGE_NEW_LICENSEE_ADDR    0x0144
+#define CARTRIDGE_SGB_FLAG_ADDR        0x0146
+#define CARTRIDGE_TYPE_ADDR            0x0147
+#define CARTRIDGE_ROM_SIZE_ADDR        0x0148
+#define CARTRIDGE_RAM_SIZE_ADDR        0x0149
+#define CARTRIDGE_DEST_CODE_ADDR       0x014A
+#define CARTRIDGE_OLD_LICENSEE_ADDR    0x014B
+#define CARTRIDGE_MASK_ROM_ADDR        0x014C
+#define CARTRIDGE_HEADER_CHECKSUM_ADDR 0x014D
+#define CARTRIDGE_GLOBAL_CHECKSUM_ADDR 0x014E
+
+
+#define SPRITE_DATA    0x8000
+
+
+
+enum DebugMode
+{
+	DEBUG_OFF,
+	DEBUG_STEP,
+	DEBUG_RUN
+};
+
+enum RomAddressDataType
+{
+	ROM_ASM,
+	ROM_DATA_1,
+	ROM_DATA_2,
+	ROM_DATA_3,
+	ROM_DATA_4,
+	ROM_DATA_7,
+	ROM_DATA_9,
+	ROM_DATA_15,
+	ROM_DATA_16
+};
+
+typedef union timer_controller
+{
+	struct
+	{
+		byte frequency : 2;
+		byte enabled : 1;
+		byte reserved : 5;
+	};
+	byte all;
+}timer_controller;
+
+class MayflowerWindow;
+class GameboyScreenPanel;
+class RamAssemblyList;
+class GBCPU;
+class GBMMU;
+class GBLCD;
+
+class EmulatorEngine
+{
+private:
+	GBCPU *m_CPU;
+	GBMMU *m_MMU;
+	GBLCD *m_LCD;
+
+	bool m_Stopped = false;
+	bool m_Halted = false;
+
+	// Timing
+	unsigned short m_DivRegisterCounter = 0;
+	word m_TimerCounter = 1024;
+
+
+	// Buffers
+	bool m_BreakPoints[0x10000] = { false };
+	word m_NthInstructionAddress[0xFFFF];
+
+	// UI Elements
+	MayflowerWindow *m_MainApp;
+	RamAssemblyList *m_AssemblyListCtrl;
+	GameboyScreenPanel *m_ScreenPanel;
+
+	// Debug
+	bool m_TraceOn = false;
+	DebugMode m_DebugMode = DEBUG_STEP;
+	bool m_WaitForDebugger = true;
+	bool m_PendingInstructionListUpdate = false;
+
+	// Misc
+	int m_MiscCycles = 0;
+	int m_NumFramesRendered = 0;
+	bool m_BootRomEnabled = true;
+	int m_ScanLineCounter = 0;
+	int m_CurrentRomBank = 1;
+	wxString m_ROMFilePath;
+
+	void Emulate();
+	void Update();
+
+	void CalcAddrInstructionList();
+	bool AddressIsBreakpoint(word Address);
+	void WaitForDebugger();
+	void UpdateTimers(int cycles);
+
+public:
+	bool GetHalted();
+	void ClearHalted();
+	void SetHalted();
+	void SetStopped();
+	void ClearStopped();
+	void RequestInterrupt(byte interrupt_bit);
+	DebugMode GetDebugMode();
+	void SetDebugMode(DebugMode mode);
+	void RemoveBreakpointAtNthInstruction(long n);
+	void AddBreakpointAtNthInstruction(long n);
+	bool NthInstructionIsBreakpoint(long n);
+	void SetRomPath(wxString path);
+	void ResetClockFrequency();
+	void CheckForButtonPress();
+	void Step();
+	void Run();
+	void DoShit();
+	int  GetSelectedRomBank();
+	word GetRegisterValue(RegisterID RegisterID);
+	word GetProgramCounter();
+	GBMMU *GetMMU();
+	GBLCD *GetLCD();
+	bool UsingBootRom();
+	wxString GetCartridgeTitle();
+	wxString GetAddressComment(unsigned short Address);
+	RomAddressDataType GetRomAddressDataType(unsigned short Address);
+	Instruction GetNthInstruction(long n, bool &IsCBPrefix, unsigned short &InstructionAddress);
+	bool NthInstructionIsPC(long n);
+	void SetPendingInstructionListUpdate();
+	EmulatorEngine(GameboyScreenPanel *ScreenPanel, RamAssemblyList *AssemblyListCtrl, MayflowerWindow *App);
+	~EmulatorEngine();
+};
+
+
+static const int TimerFrequencies[4] = { 1024, 16, 64, 256 };
+
+static const wxString CartridgeTypes[] = {
+	"ROM ONLY",                      // 00
+	"MBC1",                          // 01
+	"MBC1+RAM",                      // 02
+	"MBC1+RAM+BATTERY",              // 03
+	"-",                             // 04
+	"MBC2",                          // 05
+	"MBC2+BATTERY",                  // 06
+	"-",                             // 07
+	"ROM+RAM",                       // 08
+	"ROM+RAM+BATTERY",               // 09
+	"-",                             // 0A
+	"MMM01",                         // 0B
+	"MMM01+RAM",                     // 0C
+	"MMM01+RAM+BATTERY",             // 0D
+	"-",                             // 0E
+	"MBC3+TIMER+BATTERY",            // 0F
+	"MBC3+TIMER+RAM+BATTERY",        // 10
+	"MBC3",                          // 11
+	"MBC3+RAM",                      // 12
+	"MBC3+RAM+BATTERY",              // 13
+	"-",                             // 14
+	"-",                             // 15
+	"-",                             // 16
+	"-",                             // 17
+	"-",                             // 18
+	"MBC5",                          // 19
+	"MBC5+RAM",                      // 1A
+	"MBC5+RAM+BATTERY",              // 1B
+	"MBC5+RUMBLE",                   // 1C
+	"MBC5+RUMBLE+RAM",               // 1D
+	"MBC5+RUMBLE+RAM+BATTERY",       // 1E
+	"-",                             // 1F
+	"MBC6",                          // 20
+	"-",                             // 21
+	"MBC7+SENSOR+RUMBLE+RAM+BATTERY" // 22
+};
