@@ -1,45 +1,42 @@
 #include <wx/dcbuffer.h>
 #include "GameboyScreenPanel.h"
 
-
-
 GameboyScreenPanel::GameboyScreenPanel(wxFrame *parent) :wxPanel(parent, wxID_ANY)
 {
 	this->Connect(wxEVT_PAINT, wxPaintEventHandler(GameboyScreenPanel::OnPaint));
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
-	SetMinSize(wxSize(160,144));
-
+	SetMinSize(wxSize(SCREEN_WIDTH, SCREEN_HEIGHT));
 }
 
 void GameboyScreenPanel::OnPaint(wxPaintEvent& event)
 {
 	wxAutoBufferedPaintDC dc(this);
-	int buffer_iter = 0;
-	wxPen CurrentPen = wxPen(wxColour(15, 56, 15));
+	int BufferIter = 0;
+	int ColorScheme = COLOR_BGB;
+	byte *ScreenBuffer = m_Emulator->GetLCD()->GetScreenBuffer();
+	wxPen CurrentPen = wxPen(ColorPalettes[ColorScheme].Lightest);
 	dc.SetPen(CurrentPen);
 
-	for (int row = 0; row < 144; row++)
+	for (int row = 0; row < SCREEN_HEIGHT; row++)
 	{
-		for (int col = 0; col < 160; col++)
+		for (int col = 0; col < SCREEN_WIDTH; col++)
 		{
-			switch (m_Emulator->GetLCD()->GetScreenBuffer()[++buffer_iter])
+			switch (ScreenBuffer[BufferIter++])
 			{
-			case 3:
-				CurrentPen.SetColour(wxColour(15, 56, 15));
-				break;
-			case 2:
-				CurrentPen.SetColour(wxColour(48, 98, 48));
+			case 0:
+				CurrentPen.SetColour(ColorPalettes[ColorScheme].Lightest);
 				break;
 			case 1:
-				CurrentPen.SetColour(wxColour(139, 172, 15));
+				CurrentPen.SetColour(ColorPalettes[ColorScheme].Light);
 				break;
-			case 0:
-				CurrentPen.SetColour(wxColour(155, 188, 15));
+			case 2:
+				CurrentPen.SetColour(ColorPalettes[ColorScheme].Dark);
+				break;
+			case 3:
+				CurrentPen.SetColour(ColorPalettes[ColorScheme].Darkest);
 				break;
 			default:
 				break;
-				//std::cout << "me stupid" << std::endl;
-				//throw std::exception();
 			}
 			dc.SetPen(CurrentPen);
 			dc.DrawPoint(col, row);
