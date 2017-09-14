@@ -27,6 +27,8 @@ private:
 	void InitUI();
 	void OnRunButtonPress(wxCommandEvent& event);
 	void OnStepButtonPress(wxCommandEvent& event);
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
 
 public:
 	void RefreshGameboyScreen();

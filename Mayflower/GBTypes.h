@@ -12,6 +12,7 @@
 #define BIT_6 0x40
 #define BIT_7 0x80
 
+typedef char sint8;
 typedef unsigned char byte;
 typedef unsigned short word;
 typedef unsigned char gb_reg;

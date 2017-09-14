@@ -19,9 +19,90 @@ void GBLCD::DrawScanLine()
 		RenderBackground();
 	}
 
+	if (LCDControlFlags.WindowDisplayEnabled)
+	{
+		RenderWindow();
+	}
+
 	if (LCDControlFlags.OBJDisplayEnabled)
 	{
 		RenderSprites();
+	}
+}
+
+void GBLCD::RenderWindow()
+{
+	lcd_control LCDControlFlags = { 0 };
+	LCDControlFlags.all = m_MMU->ReadMemory8(LCDC_REGISTER);
+	byte WindowX = m_MMU->ReadMemory8(WX_REGISTER);// -7;
+	byte WindowY = m_MMU->ReadMemory8(WY_REGISTER);
+	byte CurrentLine = m_MMU->ReadMemory8(LY_REGISTER);
+	byte BackgroundPalette = m_MMU->ReadMemory8(BGP_REGISTER);
+	word TileMapStartAddr = 0;
+	word TileDataStartAddr = 0;
+	word ScreenBufferIndex = 0;
+	bool SignedTileDataOffset = false;
+
+	if (LCDControlFlags.WindowTileMapDispSelect)
+	{
+		TileMapStartAddr = 0x9C00;
+	}
+	else
+	{
+		TileMapStartAddr = 0x9800;
+	}
+
+	if (LCDControlFlags.BGWindowTileDataSelect)
+	{
+		TileDataStartAddr = 0x8000;
+	}
+	else
+	{
+		TileDataStartAddr = 0x9000;
+		SignedTileDataOffset = true;
+	}
+
+	if (WindowX >= 7)
+	{
+		WindowX -= 7;
+	}
+	else
+	{
+		WindowX = 0;
+	}
+
+	if (CurrentLine >= WindowY)
+	{
+		for (int ColIter = WindowX; ColIter < NUM_COLUMNS; ColIter++)
+		{
+			int TileMapOffset = (((CurrentLine- WindowY) / TILE_WIDTH) * 32) + (ColIter / TILE_WIDTH);
+			word TileMapAddr = TileMapStartAddr + TileMapOffset;
+			byte TileNumber = m_MMU->ReadMemory8(TileMapAddr);
+			word TileDataAddr = 0;
+
+			if (SignedTileDataOffset)
+			{
+				sint8 offset = TileNumber;
+				TileDataAddr = TileDataStartAddr + (offset * 16);
+			}
+			else
+			{
+				TileDataAddr = TileDataStartAddr + (TileNumber * 16);
+			}
+
+			byte TileCol = ColIter % 8;
+			byte TileRow = CurrentLine % 8;
+			byte RowA = m_MMU->ReadMemory8(TileDataAddr + TileRow * 2);
+			byte RowB = m_MMU->ReadMemory8(TileDataAddr + TileRow * 2 + 1);
+			byte ColBit = (7 - TileCol);
+			byte PaletteIndex = (RowA & (1 << ColBit) ? 1 : 0) | (RowB & (1 << ColBit) ? 2 : 0);
+			//byte PixelValue = (BackgroundPalette & (0b11 << (PaletteIndex * 2))) >> (PaletteIndex * 2);
+			byte PixelValue = (BackgroundPalette & (0b11 << (PaletteIndex * 2))) >> (PaletteIndex * 2);
+
+			ScreenBufferIndex = ((CurrentLine - 1) * 160) + ColIter;
+			m_ScreenBuffer[ScreenBufferIndex] = PixelValue;
+
+		}
 	}
 }
 
@@ -69,7 +150,7 @@ void GBLCD::RenderBackground()
 		int TileMapOffset = (TileY * 32) + TileX;
 		short TileMapAddr = TileMapStartAddr + TileMapOffset;
 		byte TileNumber = m_MMU->ReadMemory8(TileMapAddr);
-		short TileDataAddr = 0;
+		word TileDataAddr = 0;
 		//cout << "Tile Number: " << (unsigned short) TileNumber << endl;
 		if (SignedTileDataOffset)
 		{

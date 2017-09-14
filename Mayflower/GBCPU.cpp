@@ -188,7 +188,6 @@ void GBCPU::HandleInterrupts()
 
 	if (m_RegisterIME || Halted)
 	{
-		m_Emulator->CheckForButtonPress();
 		byte InterruptsEnabled = m_MMU->ReadMemory8(IE_REGISTER);
 		byte InterruptsRequested = m_MMU->ReadMemory8(IF_REGISTER);
 

@@ -19,6 +19,9 @@ MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy E
 	m_RamAssemblyList->SetEmulator(m_Emulator);
 	m_RegisterView->SetEmulator(m_Emulator);
 	m_MemoryViewListCtrl->SetEmulator(m_Emulator);
+
+	Bind(wxEVT_KEY_DOWN, &MayflowerWindow::OnKeyDown, this);
+	Bind(wxEVT_KEY_UP, &MayflowerWindow::OnKeyUp, this);
 }
 
 void MayflowerWindow::InitUI()
@@ -53,6 +56,42 @@ void MayflowerWindow::InitUI()
 	SetSizer(mainVSizer);
 	mainVSizer->Fit(this);
 
+}
+
+void MayflowerWindow::OnKeyDown(wxKeyEvent& event)
+{
+	switch (event.GetKeyCode())
+	{
+	case WXK_RETURN:
+	case WXK_SHIFT:
+	case WXK_LEFT:
+	case WXK_RIGHT:
+	case WXK_UP:
+	case WXK_DOWN:
+	case 'A':
+	case 'S':
+		m_Emulator->KeyDown(event.GetKeyCode());
+		break;
+	}
+	event.Skip();
+}
+
+void MayflowerWindow::OnKeyUp(wxKeyEvent& event)
+{
+	switch (event.GetKeyCode())
+	{
+	case WXK_RETURN:
+	case WXK_SHIFT:
+	case WXK_LEFT:
+	case WXK_RIGHT:
+	case WXK_UP:
+	case WXK_DOWN:
+	case 'A':
+	case 'S':
+		m_Emulator->KeyUp(event.GetKeyCode());
+		break;
+	}
+	event.Skip();
 }
 
 void MayflowerWindow::OnStepButtonPress(wxCommandEvent& event)

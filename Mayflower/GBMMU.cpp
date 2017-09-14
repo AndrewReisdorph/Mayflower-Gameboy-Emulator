@@ -166,7 +166,35 @@ void GBMMU::WriteMemory16(word Address, word value)
 
 byte GBMMU::ReadMemory8(word Address)
 {
-	return m_Memory[Address];
+	byte Value = m_Memory[Address];
+
+	switch (Address)
+	{
+	case P1_REGISTER:
+	{
+		joypad_info Joypad = m_Emulator->GetJoypad();
+		Value = (Value & 0x30) | 0xC0;
+		if (M_TestBit(Value, BIT_4))
+		{
+			Value |= Joypad.A ? JOYPAD_A : 0;
+			Value |= Joypad.B ? JOYPAD_B : 0;
+			Value |= Joypad.Select ? JOYPAD_SELECT : 0;
+			Value |= Joypad.Start ? JOYPAD_START : 0;
+
+
+		}
+		else if (M_TestBit(Value, BIT_5))
+		{
+			Value |= Joypad.Right ? JOYPAD_RIGHT : 0;
+			Value |= Joypad.Left ? JOYPAD_LEFT : 0;
+			Value |= Joypad.Up ? JOYPAD_UP : 0;
+			Value |= Joypad.Down ? JOYPAD_DOWN : 0;
+		}
+	}
+		break;
+	}
+
+	return Value;
 }
 
 word GBMMU::ReadMemory16(word Address)

@@ -96,13 +96,7 @@ void EmulatorEngine::Update()
 			m_CPU->HandleInterrupts();
 		}
 
-		m_LCD->DrawScreen();
-
-		if (m_MMU->ReadMemory8(0xD804) != temp_last)
-		{
-			cout << "break" << endl;
-			temp_last = m_MMU->ReadMemory8(0xD804);
-		}
+		//m_LCD->DrawScreen();
 
 	}
 
@@ -140,9 +134,110 @@ void EmulatorEngine::RequestInterrupt(byte interrupt_bit)
 	m_MMU->WriteMemory8(IF_REGISTER, m_MMU->ReadMemory8(IF_REGISTER) | interrupt_bit);
 }
 
-void EmulatorEngine::CheckForButtonPress()
-{
 
+void EmulatorEngine::KeyDown(int KeyCode)
+{
+	bool NeedInterrupt = false;
+
+	switch (KeyCode)
+	{
+	case WXK_RETURN:
+		if (!m_Joypad.Start)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.Start = true;
+		break;
+	case WXK_SHIFT:
+		if (!m_Joypad.Select)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.Select = true;
+		break;
+	case WXK_LEFT:
+		if (!m_Joypad.Left)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.Left = true;
+		break;
+	case WXK_RIGHT:
+		if (!m_Joypad.Right)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.Right = true;
+		break;
+	case WXK_UP:
+		if (!m_Joypad.Up)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.Up = true;
+		break;
+	case WXK_DOWN:
+		if (!m_Joypad.Down)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.Down = true;
+		break;
+	case 'A':
+		if (!m_Joypad.A)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.A = true;
+		break;
+	case 'S':
+		if (!m_Joypad.B)
+		{
+			NeedInterrupt = true;
+		}
+		m_Joypad.B = true;
+		break;
+	}
+	if (NeedInterrupt)
+	{
+		RequestInterrupt(JOYPAD_INTERRUPT);
+	}
+}
+
+void EmulatorEngine::KeyUp(int KeyCode)
+{
+	switch (KeyCode)
+	{
+	case WXK_RETURN:
+		m_Joypad.Start = false;
+		break;
+	case WXK_SHIFT:
+		m_Joypad.Select = false;
+		break;
+	case WXK_LEFT:
+		m_Joypad.Left = false;
+		break;
+	case WXK_RIGHT:
+		m_Joypad.Right = false;
+		break;
+	case WXK_UP:
+		m_Joypad.Up = false;
+		break;
+	case WXK_DOWN:
+		m_Joypad.Down = false;
+		break;
+	case 'A':
+		m_Joypad.A = false;
+		break;
+	case 'S':
+		m_Joypad.B = false;
+		break;
+	}
+}
+
+joypad_info EmulatorEngine::GetJoypad()
+{
+	return m_Joypad;
 }
 
 void EmulatorEngine::SetDebugMode(DebugMode mode)

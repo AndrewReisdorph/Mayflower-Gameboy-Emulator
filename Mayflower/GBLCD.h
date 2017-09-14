@@ -97,6 +97,7 @@ private:
 public:
 	void DrawScanLine();
 	void RenderBackground();
+	void RenderWindow();
 	void RenderSprites();
 	void DrawScreen();
 	void UpdateGraphics(int cycles);

@@ -39,7 +39,17 @@
 
 #define SPRITE_DATA    0x8000
 
-
+enum JoypadMasks
+{
+	JOYPAD_A = BIT_0,
+	JOYPAD_RIGHT = BIT_0,
+	JOYPAD_B = BIT_1,
+	JOYPAD_LEFT = BIT_1,
+	JOYPAD_SELECT = BIT_2,
+	JOYPAD_UP = BIT_2,
+	JOYPAD_START = BIT_3,
+	JOYPAD_DOWN = BIT_3
+};
 
 enum DebugMode
 {
@@ -72,6 +82,18 @@ typedef union timer_controller
 	byte all;
 }timer_controller;
 
+typedef struct joypad_info
+{
+	bool Up;
+	bool Down;
+	bool Left;
+	bool Right;
+	bool A;
+	bool B;
+	bool Start;
+	bool Select;
+}joypad_info;
+
 class MayflowerWindow;
 class GameboyScreenPanel;
 class RamAssemblyList;
@@ -93,7 +115,6 @@ private:
 	unsigned short m_DivRegisterCounter = 0;
 	word m_TimerCounter = 1024;
 
-
 	// Buffers
 	bool m_BreakPoints[0x10000] = { false };
 	word m_NthInstructionAddress[0xFFFF];
@@ -110,6 +131,7 @@ private:
 	bool m_PendingInstructionListUpdate = false;
 
 	// Misc
+	joypad_info m_Joypad = { false };
 	int m_MiscCycles = 0;
 	int m_NumFramesRendered = 0;
 	bool m_BootRomEnabled = true;
@@ -126,6 +148,9 @@ private:
 	void UpdateTimers(int cycles);
 
 public:
+	joypad_info GetJoypad();
+	void KeyDown(int KeyCode);
+	void KeyUp(int KeyCode);
 	bool GetHalted();
 	void ClearHalted();
 	void SetHalted();
@@ -139,7 +164,6 @@ public:
 	bool NthInstructionIsBreakpoint(long n);
 	void SetRomPath(wxString path);
 	void ResetClockFrequency();
-	void CheckForButtonPress();
 	void Step();
 	void Run();
 	void DoShit();

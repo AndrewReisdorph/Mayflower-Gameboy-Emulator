@@ -4,7 +4,6 @@
 #include "EmulatorEngine.h"
 #include "GBTypes.h"
 
-
 #include <iostream>
 #include <fstream>
 #include <sstream> 
