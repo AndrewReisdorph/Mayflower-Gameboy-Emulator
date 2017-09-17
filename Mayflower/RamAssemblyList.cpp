@@ -359,7 +359,7 @@ wxString RamAssemblyList::GetAddressHeading(int Address) const
 	}
 	else if (Address > 0x3FFF && Address <= 0x7FFF)
 	{
-		Heading = wxString::Format(wxT("ROM%i"), m_Emulator->GetSelectedRomBank());
+		Heading = wxString::Format(wxT("ROM%i"), m_Emulator->GetRomBankNumber());
 	}
 	else if (Address >= 0x8000 && Address < 0xA000)
 	{

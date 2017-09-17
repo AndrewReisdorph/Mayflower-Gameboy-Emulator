@@ -21,12 +21,40 @@ EmulatorEngine::EmulatorEngine(GameboyScreenPanel *ScreenPanel, RamAssemblyList 
 
 }
 
+void EmulatorEngine::EmulatorStateMachine()
+{
+	bool KeepGoing = true;
+
+	while (KeepGoing)
+	{
+		switch (m_State)
+		{
+		case EMULATOR_STATE_IDLE:
+			break;
+		case EMULATOR_STATE_INIT:
+			InitializeMachine();
+			break;
+		case EMULATOR_STATE_RUN:
+			Emulate();
+			break;
+		case EMULATOR_STATE_QUIT:
+			KeepGoing = false;
+			break;
+		}
+	}
+}
+
+void EmulatorEngine::InitializeMachine()
+{
+	m_MMU->Reset();
+	m_MMU->SetCartridge(m_ROMFilePath);
+	m_CPU->Reset();
+	
+	m_State = EMULATOR_STATE_RUN;
+}
+
 void EmulatorEngine::Emulate()
 {
-	m_MMU->ReadRomFile(m_ROMFilePath);
-	m_MMU->InitMemory();
-	CalcAddrInstructionList();
-
 	using namespace std::chrono;
 
 	microseconds next_call_time = duration_cast< microseconds >(system_clock::now().time_since_epoch());
@@ -43,6 +71,11 @@ void EmulatorEngine::Emulate()
 		{
 			CurrentTime = duration_cast<microseconds>(system_clock::now().time_since_epoch());
 		}
+
+		if (m_State != EMULATOR_STATE_RUN)
+		{
+			break;
+		}
 	}
 		
 }
@@ -53,7 +86,6 @@ void EmulatorEngine::Update()
 	int CyclesUsed = 0;
 
 	byte temp_last = m_MMU->ReadMemory8(0xD804);
-
 
 	while (CurrentCycles < CYCLES_PER_UPDATE)
 	{
@@ -75,6 +107,10 @@ void EmulatorEngine::Update()
 			break;
 		}
 #endif
+		if (m_State != EMULATOR_STATE_RUN)
+		{
+			break;
+		}
 
 		// Interrupts are checked before fetching a new instruction
 		CyclesUsed = m_CPU->ExecuteNextOp();
@@ -84,29 +120,40 @@ void EmulatorEngine::Update()
 		m_LCD->UpdateGraphics(CyclesUsed);
 		m_CPU->HandleInterrupts();
 
-		while (m_Halted)
+		while (m_Halted && m_State == EMULATOR_STATE_RUN)
 		{
 			UpdateTimers(4);
 			m_LCD->UpdateGraphics(4);
 			m_CPU->HandleInterrupts();
 		}
 		
-		while (m_Stopped)
+		while (m_Stopped && m_State == EMULATOR_STATE_RUN)
 		{
 			m_CPU->HandleInterrupts();
 		}
 
-		//m_LCD->DrawScreen();
-
+		if (m_State != EMULATOR_STATE_RUN)
+		{
+			break;
+		}
 	}
-
+	m_FrameReady = true;
 	m_LCD->DrawScreen();
 }
 
+bool EmulatorEngine::LCDFrameReady()
+{
+	return m_FrameReady;
+}
+
+void EmulatorEngine::ClearFrameReady()
+{
+	m_FrameReady = false;
+}
 
 void EmulatorEngine::WaitForDebugger()
 {
-	if (m_PendingInstructionListUpdate)
+	if (true || m_PendingInstructionListUpdate)
 	{
 		cout << "Recalculating instruction list" << endl;
 		CalcAddrInstructionList();
@@ -124,7 +171,7 @@ void EmulatorEngine::WaitForDebugger()
 	}
 	m_AssemblyListCtrl->EnsureVisible(ItemAtPC);
 	
-	while (m_WaitForDebugger){}
+	while (m_WaitForDebugger && (m_State == EMULATOR_STATE_RUN)){}
 
 	m_WaitForDebugger = (m_DebugMode == DEBUG_STEP);
 }
@@ -350,19 +397,19 @@ Instruction EmulatorEngine::GetNthInstruction(long n, bool &IsCBPrefix, unsigned
 	return NextOp;
 }
 
+void EmulatorEngine::SetState(EmulatorState State)
+{
+	m_State = State;
+}
+
 void EmulatorEngine::SetRomPath(wxString path)
 {
 	m_ROMFilePath = path;
 }
 
-int EmulatorEngine::GetSelectedRomBank()
+int EmulatorEngine::GetRomBankNumber()
 {
-	return m_MMU->GetCurrentRomBank();
-}
-
-void EmulatorEngine::DoShit()
-{
-	Emulate();
+	return m_MMU->GetRomBankNumber();
 }
 
 void EmulatorEngine::AddBreakpointAtNthInstruction(long n)
@@ -394,7 +441,7 @@ bool EmulatorEngine::NthInstructionIsPC(long n)
 
 bool EmulatorEngine::UsingBootRom()
 {
-	return m_BootRomEnabled;
+	return m_MMU->GetBootRomEnabled();
 }
 
 void EmulatorEngine::Step()
@@ -455,7 +502,7 @@ unsigned short EmulatorEngine::GetRegisterValue(RegisterID RegisterID)
 		RegisterValue = m_MMU->ReadMemory8(LY_REGISTER);
 		break;
 	case REGISTER_ROM:
-		RegisterValue = m_MMU->GetCurrentRomBank();
+		RegisterValue = m_MMU->GetRomBankNumber();
 		break;
 	case REGISTER_DIV:
 		RegisterValue = m_MMU->ReadMemory8(DIV_REGISTER);

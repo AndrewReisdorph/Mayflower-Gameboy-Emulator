@@ -11,6 +11,9 @@ private:
 	EmulatorEngine *m_Emulator;
 	void OnPaint(wxPaintEvent& event);
 	byte m_PixelData[23040];
+	byte *m_ImageData;
+	wxImage *m_ScreenImage;
+	void BuildScreenImage();
 public:
 	void SetEmulator(EmulatorEngine *Emulator);
 	GameboyScreenPanel(wxFrame *parent);
@@ -24,12 +27,19 @@ enum color_scheme
 	NUM_COLOR_SCHEMES
 };
 
+struct gb_color
+{
+	byte Red;
+	byte Green;
+	byte Blue;
+};
+
 struct palette
 {
-	wxColour Darkest;
-	wxColour Dark;
-	wxColour Light;
-	wxColour Lightest;
+	gb_color Darkest;
+	gb_color Dark;
+	gb_color Light;
+	gb_color Lightest;
 };
 
 static const palette ColorPalettes[NUM_COLOR_SCHEMES] = {

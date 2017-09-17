@@ -201,7 +201,7 @@ private:
 
 public:
 	word m_StackPointer = 0;
-	
+	void Reset();
 	int ExecuteNextOp();
 	word GetProgramCounter();
 	word GetReferenceProgramCounter();

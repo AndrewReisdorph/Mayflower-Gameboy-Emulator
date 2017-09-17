@@ -19,13 +19,31 @@ GBCPU::GBCPU(GBMMU *MMU, EmulatorEngine *Emulator)
 	m_OpHandlers[OP_ROT_SHFT_BIT_8] = &GBCPU::ExecuteRotShftBitOp;
 	m_OpHandlers[OP_CB] = &GBCPU::ExecuteCBPrefixOp;
 #if LOGGING
-	m_logfile.open("C:\\Users\\Andrew\\Downloads\\gameboy stuff\\03-op sp,hl.lg");
+	m_logfile.open("C:\\Users\\Andrew\\Downloads\\gameboy stuff\\cpu_instrs.lg");
 #endif
 }
 
 GBCPU::~GBCPU()
 {
+#if LOGGING
 	m_logfile.close();
+#endif
+}
+
+void GBCPU::Reset()
+{
+	m_RegisterA = 0;
+	m_RegisterB = 0;
+	m_RegisterC = 0;
+	m_RegisterD = 0;
+	m_RegisterE = 0;
+	m_RegisterF = { 0 };
+	m_RegisterH = 0;
+	m_RegisterL = 0;
+	m_RegisterIME = 0;
+	m_RegisterIMA = 0;
+	m_ProgramCounter = 0;
+	m_ReferenceProgramCounter = 0;
 }
 
 Instruction &GBCPU::GetInstruction(opcode OpCode)

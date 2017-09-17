@@ -20,6 +20,9 @@ MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy E
 	m_RegisterView->SetEmulator(m_Emulator);
 	m_MemoryViewListCtrl->SetEmulator(m_Emulator);
 
+	std::thread emu_thread(&EmulatorEngine::EmulatorStateMachine, m_Emulator);
+	emu_thread.detach();
+
 	Bind(wxEVT_KEY_DOWN, &MayflowerWindow::OnKeyDown, this);
 	Bind(wxEVT_KEY_UP, &MayflowerWindow::OnKeyUp, this);
 }
@@ -128,8 +131,7 @@ void MayflowerWindow::OpenROM(wxCommandEvent& event)
 	if (OpenRomDialog->ShowModal() == wxID_OK)
 	{
 		m_Emulator->SetRomPath(OpenRomDialog->GetPath());
-		std::thread emu_thread(&EmulatorEngine::DoShit, m_Emulator);
-		emu_thread.detach();
+		m_Emulator->SetState(EMULATOR_STATE_INIT);
 	}
 	OpenRomDialog->Destroy();
 }

@@ -6,16 +6,18 @@ GameboyScreenPanel::GameboyScreenPanel(wxFrame *parent) :wxPanel(parent, wxID_AN
 	this->Connect(wxEVT_PAINT, wxPaintEventHandler(GameboyScreenPanel::OnPaint));
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
 	SetMinSize(wxSize(SCREEN_WIDTH, SCREEN_HEIGHT));
+
+	m_ImageData = (unsigned char*)calloc(SCREEN_WIDTH * SCREEN_HEIGHT * 3, 1);
+	m_ScreenImage = new wxImage(SCREEN_WIDTH, SCREEN_HEIGHT, m_ImageData);
 }
 
-void GameboyScreenPanel::OnPaint(wxPaintEvent& event)
+void GameboyScreenPanel::BuildScreenImage()
 {
-	wxAutoBufferedPaintDC dc(this);
-	int BufferIter = 0;
-	int ColorScheme = COLOR_BGB;
 	byte *ScreenBuffer = m_Emulator->GetLCD()->GetScreenBuffer();
-	wxPen CurrentPen = wxPen(ColorPalettes[ColorScheme].Lightest);
-	dc.SetPen(CurrentPen);
+	int BufferIter = 0;
+	int ImageDataIter = 0;
+	int ColorScheme = COLOR_BGB;
+	gb_color CurrentColor = ColorPalettes[ColorScheme].Lightest;
 
 	for (int row = 0; row < SCREEN_HEIGHT; row++)
 	{
@@ -24,24 +26,40 @@ void GameboyScreenPanel::OnPaint(wxPaintEvent& event)
 			switch (ScreenBuffer[BufferIter++])
 			{
 			case 0:
-				CurrentPen.SetColour(ColorPalettes[ColorScheme].Lightest);
+				CurrentColor = ColorPalettes[ColorScheme].Lightest;
 				break;
 			case 1:
-				CurrentPen.SetColour(ColorPalettes[ColorScheme].Light);
+				CurrentColor = ColorPalettes[ColorScheme].Light;
 				break;
 			case 2:
-				CurrentPen.SetColour(ColorPalettes[ColorScheme].Dark);
+				CurrentColor = ColorPalettes[ColorScheme].Dark;
 				break;
 			case 3:
-				CurrentPen.SetColour(ColorPalettes[ColorScheme].Darkest);
+				CurrentColor = ColorPalettes[ColorScheme].Darkest;
 				break;
 			default:
 				break;
 			}
-			dc.SetPen(CurrentPen);
-			dc.DrawPoint(col, row);
+			m_ImageData[ImageDataIter++] = CurrentColor.Red;
+			m_ImageData[ImageDataIter++] = CurrentColor.Green;
+			m_ImageData[ImageDataIter++] = CurrentColor.Blue;
 		}
 	}
+
+}
+
+void GameboyScreenPanel::OnPaint(wxPaintEvent& event)
+{
+	wxAutoBufferedPaintDC dc(this);
+	dc.SetBrush(wxBrush(wxColour(0, 0, 0, 0), wxBRUSHSTYLE_SOLID));
+	dc.Clear();
+	if (m_Emulator->LCDFrameReady())
+	{
+		m_Emulator->ClearFrameReady();
+		BuildScreenImage();
+	}
+	dc.DrawBitmap(wxBitmap(*m_ScreenImage), wxPoint(0, 0));
+
 }
 
 void GameboyScreenPanel::SetEmulator(EmulatorEngine *Emulator)

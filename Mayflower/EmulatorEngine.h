@@ -39,6 +39,14 @@
 
 #define SPRITE_DATA    0x8000
 
+enum EmulatorState
+{
+	EMULATOR_STATE_IDLE,
+	EMULATOR_STATE_INIT,
+	EMULATOR_STATE_RUN,
+	EMULATOR_STATE_QUIT
+};
+
 enum JoypadMasks
 {
 	JOYPAD_A = BIT_0,
@@ -108,6 +116,8 @@ private:
 	GBMMU *m_MMU;
 	GBLCD *m_LCD;
 
+	EmulatorState m_State = EMULATOR_STATE_IDLE;
+
 	bool m_Stopped = false;
 	bool m_Halted = false;
 
@@ -134,9 +144,8 @@ private:
 	joypad_info m_Joypad = { false };
 	int m_MiscCycles = 0;
 	int m_NumFramesRendered = 0;
-	bool m_BootRomEnabled = true;
+	bool m_FrameReady = false;
 	int m_ScanLineCounter = 0;
-	int m_CurrentRomBank = 1;
 	wxString m_ROMFilePath;
 
 	void Emulate();
@@ -148,6 +157,11 @@ private:
 	void UpdateTimers(int cycles);
 
 public:
+	void SetState(EmulatorState State);
+	void EmulatorStateMachine();
+	void InitializeMachine();
+	bool LCDFrameReady();
+	void ClearFrameReady();
 	joypad_info GetJoypad();
 	void KeyDown(int KeyCode);
 	void KeyUp(int KeyCode);
@@ -166,8 +180,7 @@ public:
 	void ResetClockFrequency();
 	void Step();
 	void Run();
-	void DoShit();
-	int  GetSelectedRomBank();
+	int  GetRomBankNumber();
 	word GetRegisterValue(RegisterID RegisterID);
 	word GetProgramCounter();
 	GBMMU *GetMMU();

@@ -1,15 +1,17 @@
 #pragma once
+#include <chrono>
 #include <wx/wx.h>
 #include "EmulatorEngine.h"
 #include "GBCPU.h"
+#include "Cartridge.h"
 #include "GBTypes.h"
 
 #define RAM_BANK_SIZE         0x1FFF
 #define ROM_BANK_SIZE         0x4000
 #define ROM_BANK_N_ADDRESS    0x4000
 #define OAM_TRANSFER_LEN      0x00A0
-
 #define ADDR_CART_RAM         0xA000
+#define ECHO_RAM_ADDR         0xE000
 
 enum BankingMode
 {
@@ -17,77 +19,32 @@ enum BankingMode
 	BANK_MODE_RAM = 1
 };
 
-enum CartridgeType
-{
-	CART_ROM_ONLY = 0,
-	CART_MBC1 = 1,
-	CART_MBC1_RAM = 2,
-	CART_MBC1_RAM_BAT = 3,
-	CART_MBC2 = 5,
-	CART_MBC2_BAT = 6,
-	CART_ROM_RAM = 8,
-	CART_ROM_RAM_BAT = 9,
-	CART_MMM01 = 0x0B,
-	CART_MMM01_RAM = 0x0C,
-	CART_MMM01_RAM_BAT = 0x0D,
-	CART_MBC3_TIM_BAT = 0x0F,
-	CART_MBC3_TIM_RAM_BAT = 0x10,
-	CART_MBC3 = 0x11,
-	CART_MBC3_RAM = 0x12,
-	CART_MBC3_RAM_BAT = 0x13,
-	CART_MBC5 = 0x19,
-	CART_MBC5_RAM = 0x1A,
-	CART_MBC5_RAM_BAT = 0x1B,
-	CART_MBC5_RUM = 0x1C,
-	CART_MBC5_RUM_RAM = 0x1D,
-	CART_MBC5_RUM_RAM_BAT = 0x1E,
-	CART_MBC6 = 0x20,
-	CART_MBC7_SENS_RUM_RAM_BAT = 0x22,
-	CART_POCKET_CAMERA = 0xFC,
-	CART_BANDAI_TAMAS = 0xFD,
-	CART_HUC3 = 0xFE, 
-	CART_HUC1_RAM_BAT = 0xFF
-};
-
 class GBCPU;
+class Cartridge;
 
 class GBMMU
 {
 private:
-	GBCPU *m_CPU;
-	EmulatorEngine *m_Emulator;
+	GBCPU *m_CPU = nullptr;
+	EmulatorEngine *m_Emulator = nullptr;
+	Cartridge *m_Cartridge = nullptr;
 	unsigned char m_Memory[0x10000] = { 0 };
-	byte m_CartridgeRam[0x8000] = { 0 };
-	int m_CurrentRomBank = 1;
-	CartridgeType m_CartType = CART_ROM_ONLY;
-	byte *m_RomBin;
 	bool m_BootRomEnabled = true;
-	bool m_CartRamEnabled = false;
-	int m_SelectedRamBank = 0;
-	int m_SelectedRTCReg = 0;
-	BankingMode m_BankMode = BANK_MODE_ROM;
-	int m_LastLatchClockDataWritten = 0;
-
-
-	void SetupMBC();
-
 
 public:
+	bool GetBootRomEnabled();
+	void Reset();
+	void SetCartridge(wxString RomFilePath);
 	void WriteMemory8(word Address, byte value);
 	void WriteMemory16(word Address, word value);
 	byte ReadMemory8(word Address);
 	word ReadMemory16(word Address);
 	void StackPush(word value);
 	word StackPop();
-	void SwitchRomBank(byte BankNumber);
-	void SwitchRamBankOrRTCRegister(byte BankOrRTC);
-	void HandleRomRamSelectOrLatchClockData(byte value);
 	void SetCPU(GBCPU *CPU);
-	void ReadRomFile(wxString RomFilePath);
-	void InitMemory();
 	void DMATransfer();
-	int GetCurrentRomBank();
-
+	byte GetRomBankNumber();
+	byte GetRamBankNumber();
 
 	GBMMU(EmulatorEngine *Emulator);
 	~GBMMU();

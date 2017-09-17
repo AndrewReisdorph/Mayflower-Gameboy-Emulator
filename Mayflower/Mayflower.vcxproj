@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cartridge.cpp" />
     <ClCompile Include="EmulatorEngine.cpp" />
     <ClCompile Include="GameboyScreenPanel.cpp" />
     <ClCompile Include="GBCPU.cpp" />
@@ -148,12 +149,14 @@
     <ClCompile Include="GBMMU.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MayflowerWindow.cpp" />
+    <ClCompile Include="MBC1.cpp" />
     <ClCompile Include="MemoryViewListCtrl.cpp" />
     <ClCompile Include="RamAssemblyList.cpp" />
     <ClCompile Include="RegisterList.cpp" />
     <ClCompile Include="RegisterView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cartridge.h" />
     <ClInclude Include="EmulatorEngine.h" />
     <ClInclude Include="GameboyScreenPanel.h" />
     <ClInclude Include="GBCPU.h" />
@@ -163,6 +166,8 @@
     <ClInclude Include="images.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MayflowerWindow.h" />
+    <ClInclude Include="MBC1.h" />
+    <ClInclude Include="MemoryBankController.h" />
     <ClInclude Include="MemoryViewListCtrl.h" />
     <ClInclude Include="OpCodes.h" />
     <ClInclude Include="RamAssemblyList.h" />
