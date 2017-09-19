@@ -49,6 +49,13 @@ void Cartridge::InitMBC()
 	case CART_MBC1_RAM_BAT:
 		m_MBC = new MBC1(m_CartAttrs, m_RomData);
 		break;
+	case CART_MBC3_TIM_BAT:
+	case CART_MBC3_TIM_RAM_BAT:
+	case CART_MBC3:
+	case CART_MBC3_RAM:
+	case CART_MBC3_RAM_BAT:
+		m_MBC = new MBC3(m_CartAttrs, m_RomData);
+		break;
 	default:
 		cout << "Unimplemented MBC!" << endl;
 		throw exception();

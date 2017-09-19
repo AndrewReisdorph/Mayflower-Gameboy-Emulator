@@ -3,6 +3,7 @@
 #include "EmulatorEngine.h"
 #include "MemoryBankController.h"
 #include "MBC1.h"
+#include "MBC3.h"
 #include "GBTypes.h"
 
 #define CART_TYPE_ADDR     0x0147

@@ -4,7 +4,8 @@
 enum mbc_mode
 {
 	MBC_MODE_ROM,
-	MBC_MODE_RAM
+	MBC_MODE_RAM,
+	MBC_MODE_RTC
 };
 
 static const int RamSizeMap[] = {0, 2048, 8192, 32768, 131072, 65536};

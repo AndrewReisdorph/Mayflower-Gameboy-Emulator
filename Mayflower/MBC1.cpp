@@ -47,7 +47,7 @@ void MBC1::WriteMemory8(word Address, byte Value)
 	}
 	else if (Address >= 0x2000 && Address <= 0x3FFF)
 	{
-		SwitchRomBank(Value);
+		SwitchRomBank(Value & 0x1F);
 	}
 	else if (Address >= 0x4000 && Address <= 0x5FFF)
 	{
@@ -80,7 +80,7 @@ void MBC1::WriteMemory8(word Address, byte Value)
 
 void MBC1::SwitchRomBank(byte BankNumber)
 {
-	if (BankNumber == 0 || BankNumber & 0x60)
+	if (BankNumber == 0 || BankNumber & 0x60 || BankNumber & 0x40 || BankNumber & 0x20)
 	{
 		BankNumber |= 1;
 	}
