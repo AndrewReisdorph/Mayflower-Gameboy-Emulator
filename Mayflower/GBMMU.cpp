@@ -79,6 +79,7 @@ void GBMMU::WriteMemory8(word Address, byte Value)
 	{
 		switch (Address)
 		{
+		case STAT_REGISTER:
 		case SC_REGISTER:
 			break;
 		case TAC_REGISTER:
@@ -147,19 +148,19 @@ byte GBMMU::ReadMemory8(word Address)
 			Value = (Value & 0x30) | 0xC0;
 			if (M_TestBit(Value, BIT_4))
 			{
-				Value |= Joypad.A ? JOYPAD_A : 0;
-				Value |= Joypad.B ? JOYPAD_B : 0;
-				Value |= Joypad.Select ? JOYPAD_SELECT : 0;
-				Value |= Joypad.Start ? JOYPAD_START : 0;
+				Value |= Joypad.A ? 0 : JOYPAD_A;
+				Value |= Joypad.B ? 0 : JOYPAD_B;
+				Value |= Joypad.Select ? 0 : JOYPAD_SELECT;
+				Value |= Joypad.Start ? 0 : JOYPAD_START;
 
 
 			}
 			else if (M_TestBit(Value, BIT_5))
 			{
-				Value |= Joypad.Right ? JOYPAD_RIGHT : 0;
-				Value |= Joypad.Left ? JOYPAD_LEFT : 0;
-				Value |= Joypad.Up ? JOYPAD_UP : 0;
-				Value |= Joypad.Down ? JOYPAD_DOWN : 0;
+				Value |= Joypad.Right ? 0 : JOYPAD_RIGHT;
+				Value |= Joypad.Left ? 0 : JOYPAD_LEFT;
+				Value |= Joypad.Up ? 0 : JOYPAD_UP;
+				Value |= Joypad.Down ? 0 : JOYPAD_DOWN;
 			}
 		}
 		break;

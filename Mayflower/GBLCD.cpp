@@ -261,7 +261,6 @@ void GBLCD::RenderSprites()
 	}
 }
 
-
 void GBLCD::DrawScreen()
 {
 	m_ScreenPanel->Refresh();

@@ -149,6 +149,7 @@
     <ClCompile Include="GBMMU.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MayflowerWindow.cpp" />
+    <ClCompile Include="MBC0.cpp" />
     <ClCompile Include="MBC1.cpp" />
     <ClCompile Include="MBC3.cpp" />
     <ClCompile Include="MemoryViewListCtrl.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="images.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MayflowerWindow.h" />
+    <ClInclude Include="MBC0.h" />
     <ClInclude Include="MBC1.h" />
     <ClInclude Include="MBC3.h" />
     <ClInclude Include="MemoryBankController.h" />

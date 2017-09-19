@@ -44,6 +44,10 @@ void Cartridge::InitMBC()
 
 	switch (m_CartAttrs.CartType)
 	{
+	case CART_ROM_ONLY:
+	case CART_ROM_RAM:
+	case CART_ROM_RAM_BAT:
+		m_MBC = new MBC0(m_CartAttrs, m_RomData);
 	case CART_MBC1:
 	case CART_MBC1_RAM:
 	case CART_MBC1_RAM_BAT:

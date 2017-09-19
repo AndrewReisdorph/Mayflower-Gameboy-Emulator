@@ -2,6 +2,7 @@
 #include <wx/wx.h>
 #include "EmulatorEngine.h"
 #include "MemoryBankController.h"
+#include "MBC0.h"
 #include "MBC1.h"
 #include "MBC3.h"
 #include "GBTypes.h"
