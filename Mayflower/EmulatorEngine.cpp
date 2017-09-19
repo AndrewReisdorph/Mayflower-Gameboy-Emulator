@@ -327,7 +327,7 @@ void EmulatorEngine::ResetClockFrequency()
 void EmulatorEngine::UpdateTimers(int cycles)
 {
 	m_DivRegisterCounter += cycles;
-	m_MMU->WriteMemory8(DIV_REGISTER, (m_DivRegisterCounter & 0xFF00) >> 8);
+	m_MMU->SetDIV((m_DivRegisterCounter & 0xFF00) >> 8);
 
 	timer_controller TimerControl;
 	TimerControl.all = m_MMU->ReadMemory8(TAC_REGISTER);

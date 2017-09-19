@@ -44,6 +44,11 @@ void GBMMU::SetCPU(GBCPU *CPU)
 	m_CPU = CPU;
 }
 
+void GBMMU::SetDIV(byte DivValue)
+{
+	m_Memory[DIV_REGISTER] = DivValue;
+}
+
 void GBMMU::DMATransfer()
 {
 	word SourceAddr = ReadMemory8(DMA_REGISTER) << 8;

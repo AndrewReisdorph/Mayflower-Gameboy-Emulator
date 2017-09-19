@@ -32,6 +32,7 @@ private:
 	bool m_BootRomEnabled = true;
 
 public:
+	void SetDIV(byte DivValue);
 	bool GetBootRomEnabled();
 	void Reset();
 	void SetCartridge(wxString RomFilePath);
