@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cartridge.cpp" />
+    <ClCompile Include="DebugToolbar.cpp" />
     <ClCompile Include="EmulatorEngine.cpp" />
     <ClCompile Include="GameboyScreenPanel.cpp" />
     <ClCompile Include="GBCPU.cpp" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cartridge.h" />
+    <ClInclude Include="DebugToolbar.h" />
     <ClInclude Include="EmulatorEngine.h" />
     <ClInclude Include="GameboyScreenPanel.h" />
     <ClInclude Include="GBCPU.h" />

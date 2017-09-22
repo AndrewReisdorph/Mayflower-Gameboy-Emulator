@@ -6,27 +6,31 @@
 #include "RamAssemblyList.h"
 #include "RegisterView.h"
 #include "MemoryViewListCtrl.h"
+#include "DebugToolbar.h"
 
 class GameboyScreenPanel;
 class EmulatorEngine;
 class RamAssemblyList;
 class RegisterView;
 class MemoryViewListCtrl;
+class DebugToolbar;
 
 class MayflowerWindow : public wxFrame
 {
 private:
 	wxMenuBar *m_MenuBar;
-	wxMenu *FileMenu;
+	wxMenu *m_FileMenu;
+	wxMenu *m_HelpMenu;
+	wxMenu *m_DebugMenu;
+	wxMenu *m_WindowMenu;
 	EmulatorEngine *m_Emulator;
 	GameboyScreenPanel *m_ScreenPanel;
 	RamAssemblyList *m_RamAssemblyList;
 	MemoryViewListCtrl *m_MemoryViewListCtrl;
 	RegisterView *m_RegisterView;
+	DebugToolbar *m_DebugControl;
 
 	void InitUI();
-	void OnRunButtonPress(wxCommandEvent& event);
-	void OnStepButtonPress(wxCommandEvent& event);
 	void OnKeyDown(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
 

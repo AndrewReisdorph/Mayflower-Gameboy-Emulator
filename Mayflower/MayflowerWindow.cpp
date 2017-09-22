@@ -5,10 +5,21 @@
 MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy Emulator")
 {
 	m_MenuBar = new wxMenuBar;
-	FileMenu = new wxMenu;
-	FileMenu->Append(ID_OpenROM, wxT("&Open ROM"));
-	FileMenu->Append(ID_Quit, wxT("&Quit"));
-	m_MenuBar->Append(FileMenu, wxT("&File"));
+	m_FileMenu = new wxMenu;
+	m_FileMenu->Append(ID_OpenROM, wxT("&Open ROM"));
+	m_FileMenu->Append(ID_Quit, wxT("&Quit"));
+	m_MenuBar->Append(m_FileMenu, wxT("&File"));
+	m_DebugMenu = new wxMenu;
+	m_DebugMenu->Append(ID_Step, wxT("&Step"));
+	m_MenuBar->Append(m_DebugMenu, wxT("&Debug"));
+	m_WindowMenu = new wxMenu;
+	m_WindowMenu->Append(ID_VramView, wxT("&Inspect VRAM"));
+	m_MenuBar->Append(m_WindowMenu, wxT("&Window"));
+
+	m_HelpMenu = new wxMenu;
+	m_HelpMenu->Append(ID_About, wxT("&About"));
+	m_MenuBar->Append(m_HelpMenu, wxT("&Help"));
+
 	SetMenuBar(m_MenuBar);
 	Centre();
 
@@ -19,6 +30,7 @@ MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy E
 	m_RamAssemblyList->SetEmulator(m_Emulator);
 	m_RegisterView->SetEmulator(m_Emulator);
 	m_MemoryViewListCtrl->SetEmulator(m_Emulator);
+	m_DebugControl->SetEmulator(m_Emulator);
 
 	std::thread emu_thread(&EmulatorEngine::EmulatorStateMachine, m_Emulator);
 	emu_thread.detach();
@@ -32,17 +44,10 @@ void MayflowerWindow::InitUI()
 	m_ScreenPanel = new GameboyScreenPanel(this);
 	m_RamAssemblyList = new RamAssemblyList(this);
 	wxBoxSizer *mainVSizer = new wxBoxSizer(wxVERTICAL);
-	wxBoxSizer *DebugControlHSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *RamViewHSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *RegisterAndRamVSizer = new wxBoxSizer(wxVERTICAL);
 
-	wxButton *StepButton = new wxButton(this, wxID_ANY, "Step");
-	StepButton->Bind(wxEVT_BUTTON, &MayflowerWindow::OnStepButtonPress, this);
-	wxButton *RunButton = new wxButton(this, wxID_ANY, "Run");
-	RunButton->Bind(wxEVT_BUTTON, &MayflowerWindow::OnRunButtonPress, this);
-	DebugControlHSizer->Add(StepButton);
-	DebugControlHSizer->Add(RunButton);
-
+	m_DebugControl = new DebugToolbar(this, this);
 	m_MemoryViewListCtrl = new MemoryViewListCtrl(this);
 	m_RegisterView = new RegisterView(this);
 
@@ -52,8 +57,8 @@ void MayflowerWindow::InitUI()
 	RamViewHSizer->Add(m_RamAssemblyList, wxSizerFlags().Expand().Proportion(1));
 	RamViewHSizer->Add(RegisterAndRamVSizer, wxSizerFlags().Expand());
 
-	mainVSizer->Add(m_ScreenPanel, wxSizerFlags().Center());
-	mainVSizer->Add(DebugControlHSizer, wxSizerFlags().Expand());
+	mainVSizer->Add(m_DebugControl, wxSizerFlags().Expand());
+	mainVSizer->Add(m_ScreenPanel, wxSizerFlags().Center().Border());
 	mainVSizer->Add(RamViewHSizer, wxSizerFlags().Expand().Proportion(1));
 
 	SetSizer(mainVSizer);
@@ -97,12 +102,6 @@ void MayflowerWindow::OnKeyUp(wxKeyEvent& event)
 	event.Skip();
 }
 
-void MayflowerWindow::OnStepButtonPress(wxCommandEvent& event)
-{
-	m_Emulator->Step();
-	RefreshDebugger();
-}
-
 void MayflowerWindow::RefreshScreenPanel()
 {
 	m_ScreenPanel->Refresh();
@@ -118,11 +117,6 @@ void MayflowerWindow::RefreshDebugger()
 	m_RamAssemblyList->Refresh();
 	m_RegisterView->Refresh();
 	m_MemoryViewListCtrl->Refresh();
-}
-
-void MayflowerWindow::OnRunButtonPress(wxCommandEvent& event)
-{
-	m_Emulator->Run();
 }
 
 void MayflowerWindow::OpenROM(wxCommandEvent& event)

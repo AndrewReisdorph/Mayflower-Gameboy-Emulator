@@ -13,12 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\GUI Elements">
+      <UniqueIdentifier>{41067a5b-7d14-47d1-a8c3-75281e4cfb08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI Elements">
+      <UniqueIdentifier>{73340747-235a-4f83-bfa0-09bea4371970}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EmulatorEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameboyScreenPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GBCPU.cpp">
@@ -28,21 +31,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MemoryViewListCtrl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RamAssemblyList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RegisterList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RegisterView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MayflowerWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GBMMU.cpp">
@@ -60,12 +48,30 @@
     <ClCompile Include="MBC0.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MayflowerWindow.cpp">
+      <Filter>Source Files\GUI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryViewListCtrl.cpp">
+      <Filter>Source Files\GUI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="RamAssemblyList.cpp">
+      <Filter>Source Files\GUI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterList.cpp">
+      <Filter>Source Files\GUI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterView.cpp">
+      <Filter>Source Files\GUI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="GameboyScreenPanel.cpp">
+      <Filter>Source Files\GUI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugToolbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EmulatorEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameboyScreenPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GBCPU.h">
@@ -77,28 +83,10 @@
     <ClInclude Include="GBTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="images.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MayflowerWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MemoryViewListCtrl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OpCodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RamAssemblyList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RegisterList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RegisterView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GBMMU.h">
@@ -117,6 +105,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MBC0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterList.h">
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterView.h">
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="MayflowerWindow.h">
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryViewListCtrl.h">
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="RamAssemblyList.h">
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="GameboyScreenPanel.h">
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="images.h">
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugToolbar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

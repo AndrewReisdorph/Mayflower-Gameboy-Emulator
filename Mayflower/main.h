@@ -12,5 +12,8 @@ public:
 enum
 {
 	ID_OpenROM = wxID_HIGHEST + 1,
-	ID_Quit
+	ID_Quit,
+	ID_About,
+	ID_Step,
+	ID_VramView
 };
