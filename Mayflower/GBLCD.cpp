@@ -121,8 +121,6 @@ void GBLCD::RenderBackground()
 	byte BackgroundPalette = m_MMU->ReadMemory8(BGP_REGISTER);
 	int ScreenBufferIndex = 0;
 
-	//cout << "Palette: " << (unsigned short)BackgroundPalette << endl;
-
 	if (LCDControlFlags.BGTileMapDispSelect)
 	{
 		TileMapStartAddr = 0x9C00;
@@ -151,7 +149,7 @@ void GBLCD::RenderBackground()
 		short TileMapAddr = TileMapStartAddr + TileMapOffset;
 		byte TileNumber = m_MMU->ReadMemory8(TileMapAddr);
 		word TileDataAddr = 0;
-		//cout << "Tile Number: " << (unsigned short) TileNumber << endl;
+
 		if (SignedTileDataOffset)
 		{
 			char offset = TileNumber;
@@ -168,7 +166,6 @@ void GBLCD::RenderBackground()
 		byte RowB = m_MMU->ReadMemory8(TileDataAddr + TileRow * 2 + 1);
 		byte ColBit = (7 - TileCol);
 		byte PaletteIndex = (RowA & (1 << ColBit) ? 1 : 0) | (RowB & (1 << ColBit) ? 2 : 0);
-		//byte PixelValue = (BackgroundPalette & (0b11 << (PaletteIndex * 2))) >> (PaletteIndex * 2);
 		byte PixelValue = (BackgroundPalette & (0b11 << (PaletteIndex * 2))) >> (PaletteIndex * 2);
 
 		ScreenBufferIndex = ((CurrentLine - 1) * 160) + ColIter;
@@ -207,7 +204,7 @@ void GBLCD::RenderSprites()
 		}
 
 		// Check if sprite intersects with the scan line
-		if (CurrentSprite.YPosition <= ScanLine && (CurrentSprite.YPosition + VerticalSize) >= ScanLine)
+		if (CurrentSprite.YPosition <= ScanLine && (CurrentSprite.YPosition + VerticalSize - 1) >= ScanLine)
 		{
 			// Read sprite out of video ram
 			if (CurrentSprite.Attributes.YFlip)
@@ -245,7 +242,7 @@ void GBLCD::RenderSprites()
 				if (PaletteIndex == 0)continue;
 				byte PixelValue = (Palette & (0b11 << (PaletteIndex * 2))) >> (PaletteIndex * 2);
 				if (((CurrentSprite.Attributes.Priority == ABOVE_BACKGROUND) ||
-					m_ScreenBuffer[ScreenBufferIndex] == WHITE_PIXEL) )//&& PixelValue != WHITE_PIXEL )
+					m_ScreenBuffer[ScreenBufferIndex] == WHITE_PIXEL) )
 				{
 					m_ScreenBuffer[ScreenBufferIndex] = PixelValue;
 				}
@@ -264,8 +261,6 @@ void GBLCD::RenderSprites()
 void GBLCD::DrawScreen()
 {
 	m_ScreenPanel->Refresh();
-	//m_NumFramesRendered++;
-	//cout << "Drawing Frame: " << m_NumFramesRendered << endl;
 }
 
 void GBLCD::UpdateGraphics(int cycles)

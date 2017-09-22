@@ -9,7 +9,7 @@
 #define SCREEN_BUFFER_HEIGHT     256
 #define SCREEN_BUFFER_WIDTH      256
 #define CYCLES_TO_DRAW_SCAN_LINE 456 
-#define LAST_VISIBLE_SCAN_LINE   143
+#define LAST_VISIBLE_SCAN_LINE   144
 #define MAX_SCAN_LINE            153
 #define NUM_COLUMNS              160
 #define TILE_WIDTH                 8
