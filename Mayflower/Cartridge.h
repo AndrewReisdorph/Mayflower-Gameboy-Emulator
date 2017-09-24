@@ -21,6 +21,7 @@ private:
 	byte *m_RomData = nullptr;
 	MemoryBankController *m_MBC = nullptr;
 	cart_attrs m_CartAttrs;
+	wxString m_RomPath;
 
 	bool ReadRomFile(wxString RomFilePath);
 	void InitMBC();

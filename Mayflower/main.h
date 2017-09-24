@@ -1,10 +1,16 @@
 #pragma once
 #include <wx/wx.h>
+#include "MayflowerWindow.h"
 
 typedef unsigned char byte;
 
+class MayflowerWindow;
+
 class MayflowerApp : public wxApp
 {
+private:
+	MayflowerWindow *m_MayflowerWindow;
+
 public:
 	bool OnInit();
 };

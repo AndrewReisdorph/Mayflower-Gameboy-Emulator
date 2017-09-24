@@ -1,4 +1,8 @@
 #pragma once
+#include <wx/filefn.h> 
+#include <wx/file.h>
+#include <wx/filename.h>
+#include <wx/longlong.h>
 #include "Cartridge.h"
 #include "MemoryBankController.h"
 #include "GBTypes.h"
@@ -45,14 +49,14 @@ private:
 	void SwitchRomBank(byte BankNumber);
 	void WriteRTC(byte Value);
 	byte ReadRTC();
+	void InitRam();
 
 public:
 	byte GetRomBankNumber();
 	byte GetRamBankNumber();
 	byte ReadMemory8(word Address);
 	void WriteMemory8(word Address, byte Value);
-
+	void Destroy();
 	MBC3(cart_attrs CartAttrs, byte *CartridgeROM);
-	~MBC3();
 };
 

@@ -881,4 +881,7 @@ void EmulatorEngine::SetPendingInstructionListUpdate()
 
 EmulatorEngine::~EmulatorEngine()
 {
+	delete m_MMU;
+	delete m_CPU;
+	delete m_LCD;
 }

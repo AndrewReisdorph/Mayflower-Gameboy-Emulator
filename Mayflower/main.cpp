@@ -1,11 +1,10 @@
 #include "main.h"
-#include "MayflowerWindow.h"
 
 wxIMPLEMENT_APP_CONSOLE(MayflowerApp);
 
 bool MayflowerApp::OnInit()
 {
-	wxFrame* window = new MayflowerWindow();
-	bool result = window->Show();
+	m_MayflowerWindow = new MayflowerWindow();
+	bool result = m_MayflowerWindow->Show();
 	return true;
 }

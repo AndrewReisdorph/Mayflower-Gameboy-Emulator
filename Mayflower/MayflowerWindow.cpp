@@ -2,6 +2,8 @@
 #include "main.h"
 #include <thread>
 
+using namespace std;
+
 MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy Emulator")
 {
 	m_MenuBar = new wxMenuBar;
@@ -40,6 +42,20 @@ MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy E
 
 	Bind(wxEVT_KEY_DOWN, &MayflowerWindow::OnKeyDown, this);
 	Bind(wxEVT_KEY_UP, &MayflowerWindow::OnKeyUp, this);
+	Bind(wxEVT_CLOSE_WINDOW, &MayflowerWindow::OnCloseWindow, this);
+}
+
+MayflowerWindow::~MayflowerWindow()
+{
+	cout << "Mayflower window destructor" << endl;
+	delete m_IOMapWindow;
+	delete m_Emulator;
+}
+
+void MayflowerWindow::OnCloseWindow(wxCloseEvent& event)
+{
+	m_Emulator->SetState(EMULATOR_STATE_QUIT);
+	Destroy();
 }
 
 void MayflowerWindow::InitUI()

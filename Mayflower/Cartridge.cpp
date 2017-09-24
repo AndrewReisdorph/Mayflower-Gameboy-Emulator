@@ -10,6 +10,7 @@ Cartridge::Cartridge(EmulatorEngine *Emulator)
 
 bool Cartridge::Initialize(wxString RomFilePath)
 {
+	m_RomPath = RomFilePath;
 	ReadRomFile(RomFilePath);
 	ReadCartAttributes();
 	InitMBC();
@@ -32,6 +33,7 @@ void Cartridge::ReadCartAttributes()
 	m_CartAttrs.CartType = (CartridgeType)m_RomData[CART_TYPE_ADDR];
 	m_CartAttrs.RomSize = m_RomData[CART_ROM_SIZE_ADDR];
 	m_CartAttrs.RamSize = RamSizeMap[m_RomData[CART_RAM_SIZE_ADDR]];
+	strcpy(m_CartAttrs.FilePath, m_RomPath.char_str());
 }
 
 void Cartridge::InitMBC()
@@ -119,6 +121,7 @@ byte Cartridge::GetRamBankNumber()
 
 Cartridge::~Cartridge()
 {
+	m_MBC->Destroy();
 	delete m_MBC;
 	delete m_RomData;
 }

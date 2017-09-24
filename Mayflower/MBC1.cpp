@@ -97,7 +97,7 @@ byte MBC1::GetRamBankNumber()
 	return m_RamBank;
 }
 
-MBC1::~MBC1()
+void MBC1::Destroy()
 {
 	delete m_CartridgeRAM;
 }

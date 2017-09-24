@@ -59,7 +59,7 @@ byte MBC0::GetRamBankNumber()
 	return m_RamBank;
 }
 
-MBC0::~MBC0()
+void MBC0::Destroy()
 {
 	if (m_CartridgeRAM != nullptr)
 	{

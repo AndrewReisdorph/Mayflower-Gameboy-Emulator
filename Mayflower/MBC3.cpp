@@ -7,7 +7,7 @@ MBC3::MBC3(cart_attrs CartAttrs, byte *CartridgeROM)
 	m_CartAttrs = CartAttrs;
 	m_CartridgeROM = CartridgeROM;
 
-	m_CartridgeRAM = new byte[m_CartAttrs.RamSize]();
+	InitRam();
 
 	m_RtcStartTime = chrono::duration_cast< chrono::microseconds >(chrono::system_clock::now().time_since_epoch());
 	m_RomBank = 1;
@@ -148,7 +148,45 @@ byte MBC3::GetRamBankNumber()
 	return m_RamBank;
 }
 
-MBC3::~MBC3()
+void MBC3::InitRam()
 {
+	m_CartridgeRAM = new byte[m_CartAttrs.RamSize]();
+
+	wxFileName CartFileName(m_CartAttrs.FilePath);
+	wxFileName SaveFileName(CartFileName);
+	SaveFileName.SetExt("sav");
+
+	if (wxFileExists(SaveFileName.GetFullPath()))
+	{
+		wxFile SaveFile(SaveFileName.GetFullPath());
+		wxULongLong FileSize = wxFileName::GetSize(SaveFileName.GetFullPath());
+		if (FileSize == m_CartAttrs.RamSize)
+		{
+			SaveFile.Read(m_CartridgeRAM, m_CartAttrs.RamSize);
+		}
+		SaveFile.Close();
+	}
+}
+
+void MBC3::Destroy()
+{
+	switch (m_CartAttrs.CartType)
+	{
+	case CART_MBC3_RAM_BAT:
+	case CART_MBC3_TIM_RAM_BAT:
+	{
+		wxFileName CartFileName(m_CartAttrs.FilePath);
+		wxFileName SaveFileName(CartFileName);
+		SaveFileName.SetExt("sav");
+		wxFile SaveFile(SaveFileName.GetFullPath(), wxFile::write);
+		SaveFile.Write(m_CartridgeRAM, m_CartAttrs.RamSize);
+		SaveFile.Close();
+	}
+	break;
+	default:
+		break;
+	}
+
 	delete m_CartridgeRAM;
+
 }

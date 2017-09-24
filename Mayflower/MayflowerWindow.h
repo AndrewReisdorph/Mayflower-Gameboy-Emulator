@@ -42,7 +42,9 @@ public:
 	void RefreshGameboyScreen();
 	void RefreshScreenPanel();
 	MayflowerWindow();
+	~MayflowerWindow();
 	void OpenROM(wxCommandEvent& event);
+	void OnCloseWindow(wxCloseEvent& event);
 	void RefreshDebugger();
 
 	DECLARE_EVENT_TABLE()

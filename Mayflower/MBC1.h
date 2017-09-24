@@ -24,6 +24,6 @@ public:
 	byte ReadMemory8(word Address);
 	void WriteMemory8(word Address, byte Value);
 	MBC1(cart_attrs CartAttrs, byte *CartridgeROM);
-	~MBC1();
+	void Destroy();
 };
 

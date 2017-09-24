@@ -17,5 +17,6 @@ public:
 	virtual void WriteMemory8(word Address, byte value) = 0;
 	virtual byte GetRomBankNumber() = 0;
 	virtual byte GetRamBankNumber() = 0;
+	virtual void Destroy() = 0;
 };
 

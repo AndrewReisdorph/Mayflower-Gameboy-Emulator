@@ -18,8 +18,7 @@ public:
 	byte GetRamBankNumber();
 	byte ReadMemory8(word Address);
 	void WriteMemory8(word Address, byte Value);
-
+	void Destroy();
 	MBC0(cart_attrs CartAttrs, byte *CartridgeROM);
-	~MBC0();
 };
 

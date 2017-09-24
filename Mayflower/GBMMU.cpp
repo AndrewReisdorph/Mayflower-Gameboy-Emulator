@@ -183,4 +183,5 @@ word GBMMU::ReadMemory16(word Address)
 
 GBMMU::~GBMMU()
 {
+	delete m_Cartridge;
 }
