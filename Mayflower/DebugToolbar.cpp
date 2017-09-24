@@ -122,7 +122,7 @@ void DebugToolbar::OnScreenshotButtonClick(wxCommandEvent& event)
 
 void DebugToolbar::OnIOMapButtonClick(wxCommandEvent& event)
 {
-
+	m_MainApp->ShowIOMap();
 }
 
 void DebugToolbar::OnVRAMButtonClick(wxCommandEvent& event)

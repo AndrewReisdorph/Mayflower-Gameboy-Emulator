@@ -7,6 +7,7 @@
 #include "RegisterView.h"
 #include "MemoryViewListCtrl.h"
 #include "DebugToolbar.h"
+#include "IOMap.h"
 
 class GameboyScreenPanel;
 class EmulatorEngine;
@@ -14,6 +15,7 @@ class RamAssemblyList;
 class RegisterView;
 class MemoryViewListCtrl;
 class DebugToolbar;
+class IOMap;
 
 class MayflowerWindow : public wxFrame
 {
@@ -29,12 +31,14 @@ private:
 	MemoryViewListCtrl *m_MemoryViewListCtrl;
 	RegisterView *m_RegisterView;
 	DebugToolbar *m_DebugControl;
+	IOMap *m_IOMapWindow;
 
 	void InitUI();
 	void OnKeyDown(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
 
 public:
+	void ShowIOMap();
 	void RefreshGameboyScreen();
 	void RefreshScreenPanel();
 	MayflowerWindow();

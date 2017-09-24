@@ -67,7 +67,10 @@
       <Filter>Source Files\GUI Elements</Filter>
     </ClCompile>
     <ClCompile Include="DebugToolbar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="IOMap.cpp">
+      <Filter>Source Files\GUI Elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +132,10 @@
       <Filter>Header Files\GUI Elements</Filter>
     </ClInclude>
     <ClInclude Include="DebugToolbar.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="IOMap.h">
+      <Filter>Header Files\GUI Elements</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

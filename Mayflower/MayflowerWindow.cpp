@@ -23,6 +23,8 @@ MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy E
 	SetMenuBar(m_MenuBar);
 	Centre();
 
+	m_IOMapWindow = new IOMap(this);
+
 	InitUI();
 
 	m_Emulator = new EmulatorEngine(m_ScreenPanel, m_RamAssemblyList, this);
@@ -31,6 +33,7 @@ MayflowerWindow::MayflowerWindow(): wxFrame(NULL, wxID_ANY, "Mayflower Gameboy E
 	m_RegisterView->SetEmulator(m_Emulator);
 	m_MemoryViewListCtrl->SetEmulator(m_Emulator);
 	m_DebugControl->SetEmulator(m_Emulator);
+	m_IOMapWindow->SetEmulator(m_Emulator);
 
 	std::thread emu_thread(&EmulatorEngine::EmulatorStateMachine, m_Emulator);
 	emu_thread.detach();
@@ -102,6 +105,12 @@ void MayflowerWindow::OnKeyUp(wxKeyEvent& event)
 	event.Skip();
 }
 
+void MayflowerWindow::ShowIOMap()
+{
+	m_IOMapWindow->RefreshValues();
+	m_IOMapWindow->Show();
+}
+
 void MayflowerWindow::RefreshScreenPanel()
 {
 	m_ScreenPanel->Refresh();
@@ -114,6 +123,7 @@ void MayflowerWindow::RefreshGameboyScreen()
 
 void MayflowerWindow::RefreshDebugger()
 {
+	m_IOMapWindow->RefreshValues();
 	m_RamAssemblyList->Refresh();
 	m_RegisterView->Refresh();
 	m_MemoryViewListCtrl->Refresh();

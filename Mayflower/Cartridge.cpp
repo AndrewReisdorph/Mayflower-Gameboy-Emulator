@@ -107,7 +107,14 @@ byte Cartridge::GetRomBankNumber()
 
 byte Cartridge::GetRamBankNumber()
 {
-	return m_MBC->GetRamBankNumber();
+	byte BankNumber = 0;
+
+	if (m_MBC != nullptr)
+	{
+		BankNumber = m_MBC->GetRamBankNumber();
+	}
+
+	return BankNumber;
 }
 
 Cartridge::~Cartridge()

@@ -148,6 +148,7 @@
     <ClCompile Include="GBCPU.cpp" />
     <ClCompile Include="GBLCD.cpp" />
     <ClCompile Include="GBMMU.cpp" />
+    <ClCompile Include="IOMap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MayflowerWindow.cpp" />
     <ClCompile Include="MBC0.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="GBMMU.h" />
     <ClInclude Include="GBTypes.h" />
     <ClInclude Include="images.h" />
+    <ClInclude Include="IOMap.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MayflowerWindow.h" />
     <ClInclude Include="MBC0.h" />
