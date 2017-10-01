@@ -87,9 +87,36 @@ void MBC1::SwitchRomBank(byte BankNumber)
 	m_RomBank = BankNumber;
 }
 
+void MBC1::SetRomBankNumber(byte BankNumber)
+{
+	m_RomBank = BankNumber;
+}
+
 byte MBC1::GetRomBankNumber()
 {
 	return m_RomBank;
+}
+
+void MBC1::SetRamEnabled(bool Enabled)
+{
+	m_RamEnabled = Enabled;
+}
+
+void MBC1::SetRamBankNumber(byte BankNumber)
+{
+	m_RamBank = BankNumber;
+}
+
+void MBC1::SetRamBuffer(byte *RamBuffer, int Size)
+{
+	if (m_CartAttrs.RamSize == Size)
+	{
+		memcpy(m_CartridgeRAM, RamBuffer, Size);
+	}
+	else
+	{
+		throw std::exception();
+	}
 }
 
 byte MBC1::GetRamBankNumber()

@@ -181,7 +181,6 @@ void EmulatorEngine::RequestInterrupt(byte interrupt_bit)
 	m_MMU->WriteMemory8(IF_REGISTER, m_MMU->ReadMemory8(IF_REGISTER) | interrupt_bit);
 }
 
-
 void EmulatorEngine::KeyDown(int KeyCode)
 {
 	bool NeedInterrupt = false;
@@ -877,6 +876,41 @@ GBLCD *EmulatorEngine::GetLCD()
 void EmulatorEngine::SetPendingInstructionListUpdate()
 {
 	m_PendingInstructionListUpdate = true;
+}
+
+void EmulatorEngine::OpenSaveState(wxString FilePath)
+{
+	SaveState State(FilePath);
+	wxFileName RomFileName(FilePath);
+	state_entry RomFileEntry = State.Get("romfile");
+	RomFileName.SetFullName(wxString((char*)RomFileEntry.Buffer, (char*)RomFileEntry.Buffer + RomFileEntry.Size));
+	
+	if (!wxFileExists(RomFileName.GetFullPath()))
+	{
+		// If the rom file associated with the save state is not in the same
+		// directory, request it from the user
+		wxFileDialog *OpenRomDialog = new wxFileDialog(m_MainApp, _("Locate ROM for save state"), wxEmptyString, wxEmptyString, "GB files (*.gb)|*.gb", wxFD_OPEN, wxDefaultPosition);
+		int ModalStatus = OpenRomDialog->ShowModal();
+		if (ModalStatus == wxID_OK)
+		{
+			RomFileName.Assign(OpenRomDialog->GetPath());
+		}
+		OpenRomDialog->Destroy();
+
+		if (ModalStatus != wxID_OK)
+		{
+			return;
+		}
+	}
+
+	SetRomPath(RomFileName.GetFullPath());
+	InitializeMachine();
+	m_CPU->LoadState(State);
+	m_MMU->LoadState(State);
+}
+
+void EmulatorEngine::CaptureSaveState()
+{
 }
 
 EmulatorEngine::~EmulatorEngine()

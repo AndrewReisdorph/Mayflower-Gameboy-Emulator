@@ -28,6 +28,10 @@ private:
 	void ReadCartAttributes();
 
 public:
+	void SetRomBankNumber(byte BankNumber);
+	void SetRamBankNumber(byte BankNumber);
+	void SetRamEnabled(bool Enabled);
+	void SetRamBuffer(byte *RamBuffer, int Size);
 	byte GetRomBankNumber();
 	byte GetRamBankNumber();
 	byte ReadMemory8(word Address);

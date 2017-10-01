@@ -147,13 +147,24 @@ void MayflowerWindow::RefreshDebugger()
 
 void MayflowerWindow::OpenROM(wxCommandEvent& event)
 {
-	wxFileDialog *OpenRomDialog = new wxFileDialog(this, _("Choose ROM"), wxEmptyString, wxEmptyString, wxEmptyString, wxFD_OPEN, wxDefaultPosition);
+	wxFileDialog *OpenRomDialog = new wxFileDialog(this, _("Choose ROM"), wxEmptyString, wxEmptyString, "GB files (*.gb)|*.gb", wxFD_OPEN, wxDefaultPosition);
 	if (OpenRomDialog->ShowModal() == wxID_OK)
 	{
 		m_Emulator->SetRomPath(OpenRomDialog->GetPath());
 		m_Emulator->SetState(EMULATOR_STATE_INIT);
 	}
 	OpenRomDialog->Destroy();
+}
+
+void MayflowerWindow::OpenSaveState()
+{
+	wxFileDialog *OpenSaveStateDialog = new wxFileDialog(this, _("Choose Save State"), wxEmptyString, wxEmptyString, "SNA files (*.sna)|*.sna", wxFD_OPEN, wxDefaultPosition);
+	if (OpenSaveStateDialog->ShowModal() == wxID_OK)
+	{
+		m_Emulator->OpenSaveState(OpenSaveStateDialog->GetPath());
+	}
+	OpenSaveStateDialog->Destroy();
+
 }
 
 BEGIN_EVENT_TABLE(MayflowerWindow, wxFrame)

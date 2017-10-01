@@ -5,7 +5,11 @@
 #include "GBCPU.h"
 #include "Cartridge.h"
 #include "GBTypes.h"
+#include "SaveState.h"
 
+#define VRAM_SIZE             0x2000
+#define WRAM_SIZE             0x2000
+#define HRAM_SIZE             0x007F
 #define RAM_BANK_SIZE         0x1FFF
 #define ROM_BANK_SIZE         0x4000
 #define ROM_BANK_N_ADDRESS    0x4000
@@ -32,11 +36,12 @@ private:
 	bool m_BootRomEnabled = true;
 
 public:
+	void LoadState(SaveState &State);
 	void SetDIV(byte DivValue);
 	bool GetBootRomEnabled();
 	void Reset();
 	void SetCartridge(wxString RomFilePath);
-	void WriteMemory8(word Address, byte value);
+	void WriteMemory8(word Address, byte Value, bool DirectWrite=false);
 	void WriteMemory16(word Address, word value);
 	byte ReadMemory8(word Address);
 	word ReadMemory16(word Address);

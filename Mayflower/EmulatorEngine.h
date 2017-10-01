@@ -1,6 +1,8 @@
 #pragma once
 #include <set>
 #include <wx/wx.h>
+#include <wx/filename.h>
+#include <wx/longlong.h>
 #include "GameboyScreenPanel.h"
 #include "RamAssemblyList.h"
 #include "MayflowerWindow.h"
@@ -8,6 +10,7 @@
 #include "GBMMU.h"
 #include "GBLCD.h"
 #include "GBTypes.h"
+#include "SaveState.h"
 
 
 #define CYCLES_PER_UPDATE   69905
@@ -157,6 +160,7 @@ private:
 	void UpdateTimers(int cycles);
 
 public:
+	void CaptureSaveState();
 	void SetState(EmulatorState State);
 	void EmulatorStateMachine();
 	void InitializeMachine();
@@ -192,6 +196,7 @@ public:
 	Instruction GetNthInstruction(long n, bool &IsCBPrefix, unsigned short &InstructionAddress);
 	bool NthInstructionIsPC(long n);
 	void SetPendingInstructionListUpdate();
+	void OpenSaveState(wxString FilePath);
 	EmulatorEngine(GameboyScreenPanel *ScreenPanel, RamAssemblyList *AssemblyListCtrl, MayflowerWindow *App);
 	~EmulatorEngine();
 };

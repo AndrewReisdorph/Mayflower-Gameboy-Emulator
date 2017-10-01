@@ -158,6 +158,7 @@
     <ClCompile Include="RamAssemblyList.cpp" />
     <ClCompile Include="RegisterList.cpp" />
     <ClCompile Include="RegisterView.cpp" />
+    <ClCompile Include="SaveState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cartridge.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="RamAssemblyList.h" />
     <ClInclude Include="RegisterList.h" />
     <ClInclude Include="RegisterView.h" />
+    <ClInclude Include="SaveState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

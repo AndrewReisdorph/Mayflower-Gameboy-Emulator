@@ -17,6 +17,7 @@ typedef unsigned char byte;
 typedef unsigned short word;
 typedef unsigned char gb_reg;
 typedef unsigned char opcode;
+typedef unsigned int uint32;
 
 enum RegisterID
 {

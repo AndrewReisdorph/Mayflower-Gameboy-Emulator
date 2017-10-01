@@ -38,6 +38,7 @@ private:
 	void OnKeyUp(wxKeyEvent& event);
 
 public:
+	void OpenSaveState();
 	void ShowIOMap();
 	void RefreshGameboyScreen();
 	void RefreshScreenPanel();

@@ -95,6 +95,38 @@ bool Cartridge::ReadRomFile(wxString RomFilePath)
 	return RomFileRead;
 }
 
+void Cartridge::SetRamEnabled(bool Enabled)
+{
+	if (m_MBC != nullptr)
+	{
+		m_MBC->SetRamEnabled(Enabled);
+	}
+}
+
+void Cartridge::SetRomBankNumber(byte BankNumber)
+{
+	if (m_MBC != nullptr)
+	{
+		m_MBC->SetRomBankNumber(BankNumber);
+	}
+}
+
+void Cartridge::SetRamBankNumber(byte BankNumber)
+{
+	if (m_MBC != nullptr)
+	{
+		m_MBC->SetRamBankNumber(BankNumber);
+	}
+}
+
+void Cartridge::SetRamBuffer(byte *RamBuffer, int Size)
+{
+	if (m_MBC != nullptr)
+	{
+		m_MBC->SetRamBuffer(RamBuffer, Size);
+	}
+}
+
 byte Cartridge::GetRomBankNumber()
 {
 	byte BankNumber = 0;
@@ -121,7 +153,10 @@ byte Cartridge::GetRamBankNumber()
 
 Cartridge::~Cartridge()
 {
-	m_MBC->Destroy();
-	delete m_MBC;
+	if (m_MBC != nullptr)
+	{
+		m_MBC->Destroy();
+		delete m_MBC;
+	}
 	delete m_RomData;
 }

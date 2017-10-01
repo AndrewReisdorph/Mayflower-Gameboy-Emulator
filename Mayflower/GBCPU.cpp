@@ -46,6 +46,62 @@ void GBCPU::Reset()
 	m_ReferenceProgramCounter = 0;
 }
 
+void GBCPU::LoadState(SaveState &State)
+{
+	state_entry StateEntryAF = State.Get("AF");
+	if (StateEntryAF.Buffer != nullptr)
+	{
+		m_RegisterF.all = StateEntryAF.Buffer[0];
+		m_RegisterA = StateEntryAF.Buffer[1];
+	}
+
+	state_entry StateEntryBC = State.Get("BC");
+	if (StateEntryBC.Buffer != nullptr)
+	{
+		m_RegisterC = StateEntryBC.Buffer[0];
+		m_RegisterB = StateEntryBC.Buffer[1];
+	}
+
+	state_entry StateEntryDE = State.Get("DE");
+	if (StateEntryDE.Buffer != nullptr)
+	{
+		m_RegisterE = StateEntryDE.Buffer[0];
+		m_RegisterD = StateEntryDE.Buffer[1];
+	}
+
+	state_entry StateEntryHL = State.Get("HL");
+	if (StateEntryHL.Buffer != nullptr)
+	{
+		m_RegisterL = StateEntryHL.Buffer[0];
+		m_RegisterH = StateEntryHL.Buffer[1];
+	}
+
+	state_entry StateEntryPC = State.Get("PC");
+	if (StateEntryPC.Buffer != nullptr)
+	{
+		m_ProgramCounter = *((word*)StateEntryPC.Buffer);
+		m_ReferenceProgramCounter = m_ProgramCounter;
+	}
+
+	state_entry StateEntrySP = State.Get("SP");
+	if (StateEntrySP.Buffer != nullptr)
+	{
+		m_StackPointer = *((word*)StateEntrySP.Buffer);
+	}
+
+	state_entry StateEntryIME = State.Get("IME");
+	if (StateEntryIME.Buffer != nullptr)
+	{
+		m_RegisterIME = *StateEntryIME.Buffer;
+	}
+
+	state_entry StateEntryIMA = State.Get("IMA");
+	if (StateEntryIME.Buffer != nullptr)
+	{
+		m_RegisterIMA = *StateEntryIME.Buffer;
+	}
+}
+
 Instruction &GBCPU::GetInstruction(opcode OpCode)
 {
 	return InstructionSet[OpCode];

@@ -143,7 +143,7 @@ void DebugToolbar::OnSaveStateButtonClick(wxCommandEvent& event)
 
 void DebugToolbar::OnLoadStateButtonClick(wxCommandEvent& event)
 {
-
+	m_MainApp->OpenSaveState();
 }
 
 void DebugToolbar::OnRestartButtonClick(wxCommandEvent& event)

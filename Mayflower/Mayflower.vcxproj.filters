@@ -72,6 +72,9 @@
     <ClCompile Include="IOMap.cpp">
       <Filter>Source Files\GUI Elements</Filter>
     </ClCompile>
+    <ClCompile Include="SaveState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EmulatorEngine.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="IOMap.h">
       <Filter>Header Files\GUI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveState.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

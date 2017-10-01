@@ -3,7 +3,7 @@
 #include "GBMMU.h"
 #include "EmulatorEngine.h"
 #include "GBTypes.h"
-
+#include "SaveState.h"
 #include <iostream>
 #include <fstream>
 #include <sstream> 
@@ -14,36 +14,38 @@
 
 class GBMMU;
 
-
-#define OAM_START_ADDR 0xFE00 // Sprite Attribute table 0xFE00-0xFE9F
+#define VRAM_START_ADDR 0x8000 // Video Ram
+#define WRAM_START_ADDR 0xC000 // Work Ram
+#define HRAM_START_ADDR 0xFF80 // High Ram
+#define OAM_START_ADDR  0xFE00 // Sprite Attribute table 0xFE00-0xFE9F
 
 // I/O Registers
-#define P1_REGISTER    0xFF00 // Register for reading joy pad info and determining system type. (R / W)
-#define SB_REGISTER    0xFF01 // Serial transfer data (R/W)
-#define SC_REGISTER    0xFF02 // SIO control (R/W)
-#define DIV_REGISTER   0xFF04 // Divider Register (R/W)
-#define TIMA_REGISTER  0xFF05 // Timer counter (R/W)
-#define TMA_REGISTER   0xFF06 // Timer Modulo (R/W)
-#define TAC_REGISTER   0xFF07 // Timer Control (R/W)
-#define IF_REGISTER    0xFF0F // Interrupt Flag (R/W)
-#define NR10_REGISTER  0xFF10 // Sound Mode 1 register, Sweep register (R / W)
-#define NR11_REGISTER  0xFF11 // Sound Mode 1 register, Sound length/Wave pattern duty(R / W)
-#define NR52_REGISTER  0xFF26
+#define P1_REGISTER     0xFF00 // Register for reading joy pad info and determining system type. (R / W)
+#define SB_REGISTER     0xFF01 // Serial transfer data (R/W)
+#define SC_REGISTER     0xFF02 // SIO control (R/W)
+#define DIV_REGISTER    0xFF04 // Divider Register (R/W)
+#define TIMA_REGISTER   0xFF05 // Timer counter (R/W)
+#define TMA_REGISTER    0xFF06 // Timer Modulo (R/W)
+#define TAC_REGISTER    0xFF07 // Timer Control (R/W)
+#define IF_REGISTER     0xFF0F // Interrupt Flag (R/W)
+#define NR10_REGISTER   0xFF10 // Sound Mode 1 register, Sweep register (R / W)
+#define NR11_REGISTER   0xFF11 // Sound Mode 1 register, Sound length/Wave pattern duty(R / W)
+#define NR52_REGISTER   0xFF26
 // FF30 - FF3F Wave Pattern RAM
-#define LCDC_REGISTER  0xFF40 // LCD Control (R/W)
-#define STAT_REGISTER  0xFF41 // LCDC Status (R/W)
-#define SCY_REGISTER   0xFF42 // Scroll Y (R/W)
-#define SCX_REGISTER   0xFF43 // Scroll X (R/W)
-#define LY_REGISTER    0xFF44 // LCDC Y-Coordinate (R)
-#define LYC_REGISTER   0xFF45 // LY Compare (R/W)
-#define DMA_REGISTER   0xFF46 // DMA Transfer and Start Address (W)
-#define BGP_REGISTER   0xFF47 // BG & Window Palette Data (R/W)
-#define OBP0_REGISTER  0xFF48 // Object Palette 0 Data (R/W)
-#define OBP1_REGISTER  0xFF49 // Object Palette 1 Data (R/W)
-#define DSROM_REGISTER 0xFF50 // Disable bootrom
-#define WY_REGISTER    0xFF4A // Window Y Position (R/W)
-#define WX_REGISTER    0xFF4B // Window X Position (R/W)
-#define IE_REGISTER    0xFFFF // Interrupt Enable (R/W)
+#define LCDC_REGISTER   0xFF40 // LCD Control (R/W)
+#define STAT_REGISTER   0xFF41 // LCDC Status (R/W)
+#define SCY_REGISTER    0xFF42 // Scroll Y (R/W)
+#define SCX_REGISTER    0xFF43 // Scroll X (R/W)
+#define LY_REGISTER     0xFF44 // LCDC Y-Coordinate (R)
+#define LYC_REGISTER    0xFF45 // LY Compare (R/W)
+#define DMA_REGISTER    0xFF46 // DMA Transfer and Start Address (W)
+#define BGP_REGISTER    0xFF47 // BG & Window Palette Data (R/W)
+#define OBP0_REGISTER   0xFF48 // Object Palette 0 Data (R/W)
+#define OBP1_REGISTER   0xFF49 // Object Palette 1 Data (R/W)
+#define DSROM_REGISTER  0xFF50 // Disable bootrom
+#define WY_REGISTER     0xFF4A // Window Y Position (R/W)
+#define WX_REGISTER     0xFF4B // Window X Position (R/W)
+#define IE_REGISTER     0xFFFF // Interrupt Enable (R/W)
 
 
 #define NUM_INTERRUPTS 5
@@ -201,6 +203,8 @@ private:
 
 public:
 	word m_StackPointer = 0;
+
+	void LoadState(SaveState &State);
 	void Reset();
 	int ExecuteNextOp();
 	word GetProgramCounter();

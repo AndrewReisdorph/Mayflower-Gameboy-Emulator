@@ -20,6 +20,10 @@ private:
 
 public:
 	byte GetRomBankNumber();
+	void SetRomBankNumber(byte BankNumber);
+	void SetRamBankNumber(byte BankNumber);
+	void SetRamEnabled(bool Enabled);
+	void SetRamBuffer(byte *RamBuffer, int Size);
 	byte GetRamBankNumber();
 	byte ReadMemory8(word Address);
 	void WriteMemory8(word Address, byte Value);

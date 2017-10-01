@@ -49,6 +49,33 @@ byte MBC0::ReadMemory8(word Address)
 	return Value;
 }
 
+void MBC0::SetRomBankNumber(byte BankNumber)
+{
+	return;
+}
+
+void MBC0::SetRamBankNumber(byte BankNumber)
+{
+	return;
+}
+
+void MBC0::SetRamEnabled(bool Enabled)
+{
+	return;
+}
+
+void MBC0::SetRamBuffer(byte *RamBuffer, int Size)
+{
+	if (m_CartAttrs.RamSize == Size)
+	{
+		memcpy(m_CartridgeRAM, RamBuffer, Size);
+	}
+	else
+	{
+		throw std::exception();
+	}
+}
+
 byte MBC0::GetRomBankNumber()
 {
 	return m_RomBank;
