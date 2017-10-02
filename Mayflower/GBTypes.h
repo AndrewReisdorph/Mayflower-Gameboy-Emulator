@@ -73,7 +73,7 @@ enum CartridgeType
 
 typedef struct cart_attrs
 {
-#define CART_NAME_BUFFER_SIZE 64
+#define CART_NAME_BUFFER_SIZE 512
 	char FilePath[CART_NAME_BUFFER_SIZE];
 	CartridgeType CartType;
 	int RomSize;

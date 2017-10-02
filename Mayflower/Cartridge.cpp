@@ -31,7 +31,7 @@ void Cartridge::WriteMemory8(word Address, byte Value)
 void Cartridge::ReadCartAttributes()
 {
 	m_CartAttrs.CartType = (CartridgeType)m_RomData[CART_TYPE_ADDR];
-	m_CartAttrs.RomSize = m_RomData[CART_ROM_SIZE_ADDR];
+	m_CartAttrs.RomSize = RomSizeMap[m_RomData[CART_ROM_SIZE_ADDR]];
 	m_CartAttrs.RamSize = RamSizeMap[m_RomData[CART_RAM_SIZE_ADDR]];
 	strcpy(m_CartAttrs.FilePath, m_RomPath.char_str());
 }

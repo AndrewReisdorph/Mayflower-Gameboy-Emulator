@@ -14,25 +14,37 @@ MBC1::MBC1(cart_attrs CartAttrs, byte *CartridgeROM)
 
 byte MBC1::ReadMemory8(word Address)
 {
-	byte Value = 0;
+	// Initialize Value with 0xFF. This is the default value for reads to memory
+	// locations which exceed the bounds of the cartridge storage
+	byte Value = 0xFF;
 	
 	if (Address >= 0x0000 && Address <= 0x3FFF)
 	{
-		Value = m_CartridgeROM[Address];
+		if (Address < m_CartAttrs.RomSize)
+		{
+			Value = m_CartridgeROM[Address];
+		}
 	}
 	else if (Address >= 0x4000 && Address <= 0x7FFF)
 	{
 		int RomOffset = (m_RomBank * ROM_BANK_SIZE) + (Address - 0x4000);
-		Value = m_CartridgeROM[RomOffset];
+		if (RomOffset < m_CartAttrs.RomSize)
+		{
+			Value = m_CartridgeROM[RomOffset];
+		}
 	}
 	else if (Address >= 0xA000 && Address <= 0xBFFF)
 	{
 		int RamAddress = (m_RamBank * RAM_BANK_SIZE) + (Address - 0xA000);
-		Value = m_CartridgeRAM[RamAddress];
+		if (RamAddress < m_CartAttrs.RamSize)
+		{
+			Value = m_CartridgeRAM[RamAddress];
+		}
 	}
 	else
 	{
-		// Invalid Memory Address
+		// Invalid Memory Address. The MMU should not ever request memory outside
+		// the given regions.
 		throw exception();
 	}
 

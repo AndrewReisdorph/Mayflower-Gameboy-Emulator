@@ -9,6 +9,7 @@ enum mbc_mode
 };
 
 static const int RamSizeMap[] = {0, 2048, 8192, 32768, 131072, 65536};
+static const int RomSizeMap[] = {32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 1179648, 1310720, 1572864};
 
 class MemoryBankController
 {
