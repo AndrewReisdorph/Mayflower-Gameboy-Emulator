@@ -89,7 +89,6 @@ void EmulatorEngine::Update()
 
 	while (CurrentCycles < CYCLES_PER_UPDATE)
 	{
-#if 1
 		switch (m_DebugMode)
 		{
 		case DEBUG_OFF:
@@ -106,7 +105,7 @@ void EmulatorEngine::Update()
 			}
 			break;
 		}
-#endif
+
 		if (m_State != EMULATOR_STATE_RUN)
 		{
 			break;
@@ -171,7 +170,10 @@ void EmulatorEngine::WaitForDebugger()
 	}
 	m_AssemblyListCtrl->EnsureVisible(ItemAtPC);
 	
-	while (m_WaitForDebugger && (m_State == EMULATOR_STATE_RUN)){}
+	while (m_WaitForDebugger && (m_State == EMULATOR_STATE_RUN))
+	{
+		wxSleep(0);
+	}
 
 	m_WaitForDebugger = (m_DebugMode == DEBUG_STEP);
 }

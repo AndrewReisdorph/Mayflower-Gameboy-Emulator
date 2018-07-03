@@ -26,7 +26,7 @@ typedef union rtc_dh
 		byte DayCounterCarry : 1;
 	};
 	byte all;
-};
+} rtc_dh;
 
 class MBC3 :
 	public MemoryBankController
